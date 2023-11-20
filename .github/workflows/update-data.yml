@@ -1,0 +1,39 @@
+name: Update JSON file
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make API request and update JSON
+        run: |
+          # Make your API request and store the response in a file
+          curl -s -o response.json '${{ secrets.endpoint }}'
+
+          # Extract the "fu" value from the API response
+          fu_value=$(jq -r '.fu' response.json)
+
+          # Create a new JSON entry with the extracted "fu" value and current timestamp
+          new_entry="{\"timestamp\": $(date +%s), \"KR\": $fu_value}"
+
+          # Append the new entry to the existing JSON file
+          jq '. += ['"$new_entry"']' data.json > modified.json
+
+          # Overwrite the original JSON file with the modified one
+          mv modified.json data.json
+
+      - name: Commit changes
+        run: |
+          git config user.name 'Alexandre Pereira'
+          git config user.email '${{ secrets.email }}'
+          
+          git add data.json
+          git commit -m "Add new entry to JSON file"
+          git push
