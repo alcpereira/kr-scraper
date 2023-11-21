@@ -2,7 +2,7 @@ name: Update JSON file
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/10 * * * *'
 
 jobs:
   update-json:
