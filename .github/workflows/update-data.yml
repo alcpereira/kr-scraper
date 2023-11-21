@@ -2,7 +2,7 @@ name: Update JSON file
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: "*/10 * * * *"
 
 jobs:
   update-json:
@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name 'Alexandre Pereira'
           git config user.email '${{ secrets.email }}'
-          
+
           git add data.json
           git commit -m "Add new entry to JSON file"
           git push
